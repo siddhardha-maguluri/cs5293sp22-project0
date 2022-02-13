@@ -1,0 +1,5 @@
+.eggs/
+project0.egg-info/
+
+# in case you work with IntelliJ/PyCharm
+.idea
