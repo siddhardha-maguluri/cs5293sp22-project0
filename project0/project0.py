@@ -43,7 +43,7 @@ def extractincidents(incidents_data):
             pdf_data.append(cleaned_page_data)
         elif page_number == totalnoofpages -1:
             page_data = pdfreader.getPage(page_number).extractText().split("\n")
-            for i in range(5, len(page_data)-2):
+            for i in range(0, len(page_data)-2):
                 cleaned_page_data.append(page_data[i])
             pdf_data.append(cleaned_page_data)
         else:
@@ -123,13 +123,7 @@ def createdb():
         fp.close()
         connnection = sqlite3.connect('normanpd.db')
         # print("---database created successfully---", connnection)
-        return connnection
-    except Error as e:
-        print(e)      
-
-def populatedb(db, incidents):
-    cursor = db.cursor()
-    create_incidents_table = ''' CREATE TABLE incidents (
+        create_incidents_table = ''' CREATE TABLE incidents (
                                 incident_time TEXT,
                                 incident_number TEXT,
                                 incident_location TEXT,
@@ -137,8 +131,14 @@ def populatedb(db, incidents):
                                 incident_ori TEXT
                                 );
                             '''
-    cursor.execute(create_incidents_table)
+        cursor = connnection.cursor()
+        cursor.execute(create_incidents_table)
+        return connnection
+    except Error as e:
+        print(e)      
 
+def populatedb(db, incidents):
+    cursor = db.cursor()
     insert_query = """ INSERT INTO incidents VALUES (?, ?, ?, ?, ?);"""
     
     for row in incidents:
@@ -151,7 +151,7 @@ def status(db):
     cursor = db.cursor()
 
     # SQL query to retrieve names of unique incidents and their count
-    select_unique_incident_natures = "SELECT nature, count(nature) as no_of_times from incidents where nature not like '' group by nature"
+    select_unique_incident_natures = "SELECT nature, count(nature) as no_of_times from incidents where nature not like '' group by nature order by no_of_times desc, nature"
     query_result = cursor.execute(select_unique_incident_natures)
 
     # Output the query result
