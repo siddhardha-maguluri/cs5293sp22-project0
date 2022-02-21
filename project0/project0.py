@@ -17,11 +17,9 @@ def getindexesofdatecolumn(page):
 
 def fetchincidents(url):
     """
-    Takes a URL string, reads the data from the url and return raw data(i.e; data in bytes format)
+    Takes a URL string, reads the incidents data from the url and return raw data(i.e; data in bytes format)
     """
     raw_data = urlopen(url).read()
-    with open('data.txt', 'wb') as f:
-        f.write(raw_data)
     return raw_data
 
 def extractincidents(incidents_data):
@@ -63,8 +61,16 @@ def extractincidents(incidents_data):
             # record = ''
             start = date_time_indexes[i]
             if i == len(date_time_indexes)-1:
-                for j in range(start,len(page)):
-                    cleaned_data_for_each_page.append(page[j])
+                end = len(page)
+                if end - start < 5:
+                    cleaned_data_for_each_page.append(page[start])
+                    cleaned_data_for_each_page.append(page[(start+1)])
+                    cleaned_data_for_each_page.append('')
+                    cleaned_data_for_each_page.append('')
+                    cleaned_data_for_each_page.append(page[(start+2)])
+                else:
+                    for j in range(start,len(page)):
+                        cleaned_data_for_each_page.append(page[j])
             else:
                 end = date_time_indexes[i+1]
                 if end - start < 5:
@@ -89,6 +95,7 @@ def extractincidents(incidents_data):
     
     all_rows = []
 
+    # creating a row and adding it to list
     for page_number in range(0,totalnoofpages):
         for i in range(0, len(cleaned_pdf_data[page_number]),5):
             row = []
