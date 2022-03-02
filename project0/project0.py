@@ -17,7 +17,7 @@ def getindexesofdatecolumn(page):
 
 def fetchincidents(url):
     """
-    Takes a URL string, reads the incidents data from the url and return raw data(i.e; data in bytes format)
+    Takes a ```URL``` string, reads the incidents data from the url and return raw data(i.e; data in bytes format)
     """
     raw_data = urlopen(url).read()
     return raw_data
@@ -58,7 +58,6 @@ def extractincidents(incidents_data):
         date_time_indexes = getindexesofdatecolumn(page)
         cleaned_data_for_each_page = []
         for i in range(0,len(date_time_indexes)):
-            # record = ''
             start = date_time_indexes[i]
             if i == len(date_time_indexes)-1:
                 end = len(page)
@@ -79,7 +78,6 @@ def extractincidents(incidents_data):
                     cleaned_data_for_each_page.append('')
                     cleaned_data_for_each_page.append('')
                     cleaned_data_for_each_page.append(page[(start+2)])
-                    # record = page[start] + ' ' +page[(start+1)] + ' ' + 'null' + ' '+ 'null' + ' ' +  page[(start+2)]
                 elif end - start > 5:
                     cleaned_data_for_each_page.append(page[start])
                     cleaned_data_for_each_page.append(page[(start+1)])
@@ -87,7 +85,6 @@ def extractincidents(incidents_data):
                     cleaned_data_for_each_page.append(clean_address)
                     cleaned_data_for_each_page.append(page[(start+4)])
                     cleaned_data_for_each_page.append(page[(start+5)])
-                    # record = page[start] + ' ' + page[(start+1)] + ' '+ page[(start+2)]
                 else: 
                     for j in range(start,end):
                         cleaned_data_for_each_page.append(page[j])
@@ -111,8 +108,6 @@ def extractincidents(incidents_data):
             row.append(column5)
             all_rows.append(row)
 
-    # print(all_rows)
-
     return all_rows
     
 def createdb():
@@ -122,7 +117,6 @@ def createdb():
         fp = open('normanpd.db','x')
         fp.close()
         connnection = sqlite3.connect('normanpd.db')
-        # print("---database created successfully---", connnection)
         create_incidents_table = ''' CREATE TABLE incidents (
                                 incident_time TEXT,
                                 incident_number TEXT,
@@ -144,14 +138,13 @@ def populatedb(db, incidents):
     for row in incidents:
         cursor.execute(insert_query, (row[0],row[1],row[2],row[3],row[4]))
     
-    # print('inserted all pdf data into database')
     db.commit()
 
 def status(db):
     cursor = db.cursor()
 
     # SQL query to retrieve names of unique incidents and their count
-    select_unique_incident_natures = "SELECT nature, count(nature) as no_of_times from incidents where nature not like '' group by nature order by no_of_times desc, nature"
+    select_unique_incident_natures = "SELECT nature, count(nature) as no_of_times from incidents group by nature order by no_of_times desc, nature"
     query_result = cursor.execute(select_unique_incident_natures)
 
     # Output the query result
