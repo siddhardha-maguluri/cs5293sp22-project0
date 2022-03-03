@@ -1,3 +1,2 @@
 setuptools==57.0.0
 PyPDF2==1.26.0
-project0==1.0
