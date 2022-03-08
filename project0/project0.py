@@ -1,15 +1,36 @@
+# Author: Siddhardha Maguluri <Siddhardha.Maguluri@ou.edu>.
+
+"""This module provides the functions that we can use to extract 
+the content from a incident PDF from Norman Police Department, 
+create a database and the populate the database with the extracted query, 
+and Show the output of database query.
+"""
 import os
 import sqlite3
 from  sqlite3 import Error
 import re
 import tempfile
+from typing import List
 
-#from urllib.request import urlopen
 import urllib.request
 import PyPDF2
 
-# get the index of date time column in a page, as we know every row in page start with date and time.
-def getindexesofdatecolumn(page):
+
+def getindexesofdatecolumn(page: List[str]) -> List[int]:
+    """
+    get the index of date time column in a page, as we know every row in page start with date and time.
+
+    Parameters
+    ----------
+    page: List[str]
+        Content of one pdf page as list of strings.
+    
+    Return
+    ------
+    date_time_columns_indexes: List[int]
+        a list of indexes of date time column data in the given list of strings.
+    
+    """
     date_time_column_indexes = []
     for column_index in range(0, len(page)):
         if re.match("[0-9]+\/[0-9]+\/[0-9]{4} [0-9]+:[0-9]+", page[column_index]):
@@ -18,9 +39,19 @@ def getindexesofdatecolumn(page):
     return date_time_column_indexes
 
 
-def fetchincidents(url):
+def fetchincidents(url: str) -> bytes:
     """
-    Takes an incident page ```URL```, reads the incidents data from the url and return raw data(i.e; data in bytes format)
+    Takes an incident page ```URL```, reads the incidents data from the url using urlib and return raw data(i.e; data in bytes format)
+
+    Paramaters
+    ----------
+    url : str
+        An url of the incidents page from Norman Police Department site.
+
+    Returns
+    -------
+    data: bytes
+        returns a data in bytes format
     """
     headers = {}
     headers['User-Agent'] = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"
@@ -30,10 +61,20 @@ def fetchincidents(url):
     return raw_data
 
 
-def extractincidents(incidents_data):
+def extractincidents(incidents_data: bytes) -> List[list[str]]:
     """
-    Takes the incident data( which is data in byte format) as input and creates a temporary pdf file and extract the contents of file as list of lists. Each item in
-    the returned list is a list of strings of each individual row.
+    Takes the incident data( which is data in byte format) as input and creates a temporary pdf file and extract the contents of file as list of lists. 
+
+    Paramaters
+    ----------
+    incidents_data : bytes
+        data of a pdf file in bytes format.
+
+    Return
+    ------
+    rows: List(list)
+        all rows in the pdf file as a list
+ 
     """
     fp = tempfile.TemporaryFile()
     fp.write(incidents_data)
@@ -41,8 +82,12 @@ def extractincidents(incidents_data):
     pdfreader = PyPDF2.PdfFileReader(fp)
     totalnoofpages = pdfreader.getNumPages()
 
-    pdf_data = []
+    pdf_data = []  # list with pdf contents after removing unwanted content of each page.
 
+    # extractText of PyPDF2 will returns the page content as one long string. using split with '\n' as delimiter gives
+    # us a list of strings(page content). in this case page 0 has some extra values at the start and end, 
+    # while last page will have an extra value at the end. all these extra values need to be removed. 
+    # Hence, first page and last page is handled seperately.  
     for page_number in range(0, totalnoofpages):
         cleaned_page_data = []
         if page_number == 0:
@@ -61,7 +106,7 @@ def extractincidents(incidents_data):
                 cleaned_page_data.append(page_data[i])
             pdf_data.append(cleaned_page_data)
 
-    cleaned_pdf_data = []
+    cleaned_pdf_data = [] # list of page contents after handling the rows with missing values and rows with address column in 2 lines 
 
     for index, page in enumerate(pdf_data):
         date_time_indexes = getindexesofdatecolumn(page)
@@ -101,7 +146,9 @@ def extractincidents(incidents_data):
 
     all_rows = []
 
-    # creating a row and adding it to list
+    # As we know every row or record in a pdf should 5 column values, 
+    # i am taking 5 elements from a list and creating a row and 
+    # finally adding it to all_rows list. So, all_rows is list of lists, where each list contains column values of each row.
     for page_number in range(0, totalnoofpages):
         for i in range(0, len(cleaned_pdf_data[page_number]), 5):
             row = []
@@ -120,8 +167,19 @@ def extractincidents(incidents_data):
     return all_rows
 
 
-def createdb():
-    """ creates an SQLite Database with a table named ```incidents``` """
+def createdb() -> sqlite3.Connection:
+    """ 
+    creates an SQLite Database with a table named ```incidents``` 
+    
+    Parameters
+    ----------
+    None
+
+    Return
+    ------
+    a sqlite3 database connection object.
+    
+    """
     try:
         if os.path.exists("normanpd.db"):
             os.remove("normanpd.db")
@@ -144,9 +202,24 @@ def createdb():
         print(e)
 
 
-def populatedb(db, incidents):
-    """Populates the database with the given incidents data"""
+def populatedb(db: sqlite3.Connection, incidents: List[list[str]]) -> None :
+    """
+    Populates the database with the given incidents data
 
+    Parameters
+    ----------
+    db: sqlite.Connection
+        a sqlite3 database connection object
+
+    incidents: List[list[str]]
+        list of rows in a pdf file.
+
+    Return
+    ------
+    None
+
+    """
+    
     cursor = db.cursor()
     print(incidents)
     insert_query = "INSERT INTO incidents VALUES (?, ?, ?, ?, ?)"
@@ -158,7 +231,18 @@ def populatedb(db, incidents):
 
 
 def status(db):
-    """Prints the query result to the standard output"""
+    """
+    Prints the query result to the standard output.
+
+    Parameters
+    ----------
+    db: sqlite.Connection
+        a sqlite3 database connection object
+    
+    Return
+    ------
+    None
+    """
     cursor = db.cursor()
 
     # SQL query to retrieve names of unique incidents and their count

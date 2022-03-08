@@ -13,7 +13,8 @@ Contains code for the projects that are done as part of text analytics class.
 ## External libraries used and their installation procedure and usage
 1. ```PyPDF2``` - This package is used to extract the data from a PDF file.  
    Installation : To install the package run ```pipenv install PyPDF2```
-   usage        :  
+
+   usage:  
 
    PdfFileReader() - to create an pdf reader object.  
    getNumPages()   - gives the count of total number of pages in a pdf.  
@@ -23,10 +24,21 @@ Contains code for the projects that are done as part of text analytics class.
 
 2. ```pytest``` - This package is used to unittest the code.
    Installation : To install the package run ```pipenv install PyPDF2```
-   Usage        :  u
-   assert - to assertt the value that a function returns.
+   
+   Usage:
+   assert - to assert the value that a function returns.
+
+
+3. ```black```  - A PEP 8 compliant Python code formatter
+   Installation : To install the package run ```pipenv install black```
+
+   Usage: ```black  filename or directoryname```
+
+
 
 ## Bugs
+1. The code won't work as expected on empty pdfs.
+2. 
 
 ## Explanation of functions written in python 
 
@@ -35,8 +47,7 @@ Contains code for the projects that are done as part of text analytics class.
 3. ```createdb()```           - Creates an SQLite Database with a table named ```incidents```  
 4. ```populatedb()```         - Populate the database with input values.  
 5. ````Status()```            - Prints the query result in a formatted way to the std output.  
-6. ```getindexesofdatecolumn()``` - Given a list of page contents as input parameter, returns a list with indexes of 'date time column'. this 
-will helps us to form a row of data. 
+6. ```getindexesofdatecolumn()``` - Given a list of page contents as input parameter, returns a list with indexes of 'date time column'. this will helps us to form a row of data. 
 
 
 ## approach of database development
@@ -47,3 +58,4 @@ will helps us to form a row of data.
 I have made the following assumptions about data.  
 1. For some of the rows in pdf, if there will be any missing values, those will be always 3rd and 4th columns.
 2. For some of the rows in pdf, address column will always be 2 lines only.
+3. The url will always be a incident url.
