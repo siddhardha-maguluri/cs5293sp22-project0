@@ -3,3 +3,4 @@ project0.egg-info/
 project0/__pycache__/
 # in case you work with IntelliJ/PyCharm
 .idea
+Pipfile.lock

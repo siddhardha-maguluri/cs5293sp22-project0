@@ -15,23 +15,28 @@ Contains code for the projects that are done as part of text analytics class.
 ## External libraries used and their installation procedure and usage
 1. ```PyPDF2``` - This package is used to extract the data from a PDF file.  
    Installation : To install the package run ```pipenv install PyPDF2```
-   usage        :  
+
+   usage:  
 
    PdfFileReader() - to create an pdf reader object.  
    getNumPages()   - gives the count of total number of pages in a pdf.  
    getPage()       - to access a individual page. will send page number as a parameter.  
    extractText()   - to extract the content of a page.  
    
-
-2. ```pytest``` - This package is used to unittest the code.  
-   Installation : To install the package run ```pipenv install pytest```  
+2. ```pytest``` - This package is used to unittest the code.
+   Installation : To install the package run ```pipenv install PyPDF2```
    
-   Usage        :  
-   
+   Usage:
    assert - to assert the value that a function returns.
 
-## Bugs
 
+3. ```black```  - A PEP 8 compliant Python code formatter
+   Installation : To install the package run ```pipenv install black```
+
+   Usage: ```black  filename or directoryname```
+
+## Bugs
+1. The code won't work as expected on empty pdfs.
 
 ## Explanation of functions written in python 
 
@@ -39,9 +44,8 @@ Contains code for the projects that are done as part of text analytics class.
 2. ```extractincidents()```   - Takes the incident data( which is data in byte format) as input and creates a temporary pdf file and extract the contents of file as list of lists. Each item in the returned list is a list of strings of each individual row.  
 3. ```createdb()```           - Creates an SQLite Database with a table named ```incidents```  
 4. ```populatedb()```         - Populate the database with input values.  
-5. ```Status()```            - Prints the query result in a formatted way to the std output.  
-6. ```getindexesofdatecolumn()``` - Given a list of page contents as input parameter, returns a list with indexes of 'date time column'. this 
-will helps us to form a row of data. 
+5. ````Status()```            - Prints the query result in a formatted way to the std output.  
+6. ```getindexesofdatecolumn()``` - Given a list of page contents as input parameter, returns a list with indexes of 'date time column'. this will helps us to form a row of data. 
 
 
 ## Approach of database development
@@ -52,3 +56,5 @@ will helps us to form a row of data.
 I have made the following assumptions about data.  
 1. For some of the rows in pdf, if there will be any missing values, those will be always 3rd and 4th columns.
 2. For some of the rows in pdf, address column will always be 2 lines only.
+3. The url will always be a incident url.
+
