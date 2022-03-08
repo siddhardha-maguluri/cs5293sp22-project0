@@ -58,3 +58,18 @@ I have made the following assumptions about data.
 2. For some of the rows in pdf, address column will always be 2 lines only.
 3. The url will always be a incident url.
 
+## Explanations of unit tests:
+
+For each function in the project i have written one unit testcase.
+
+1. test_fetchincidents() - in this test function, i am calling my method as usual by sending url as parameter. this gives me data in bytes. Now i have the same file in docs folder. Open the file using Open() and reads data from file using read() method and comparing whether both data is same or not.
+
+2. test_extractincidents() - in this test function, opens the file and reads data from it and call the function named extractincidents. i am checking the length of the list that is returned by that function. 
+
+3. test_createdb() - in this test function, i am checking the return type of createdb(). it should be an object of Connection class from sqlite3 package. i am also checking whether normanpd.db database file is created or not.
+
+4. test_populatedb() - in this test function, by calling populatedb() i am inserting 2 records into the database and then wrote a select query to get the records in the database.
+
+5. test_status() - in this test function, i used builtin fixture capsys to verify the output printed is same as the one that will be by calling status().
+
+6. test_datetimeindexes() - in this test function, i am checking whether i am getting a list of indexes of date_time string. 
