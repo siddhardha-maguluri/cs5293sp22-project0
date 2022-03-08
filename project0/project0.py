@@ -186,7 +186,6 @@ def createdb() -> sqlite3.Connection:
         fp = open("normanpd.db", "x")
         fp.close()
         connnection = sqlite3.connect("normanpd.db")
-        print(type(connnection))
         create_incidents_table = """ CREATE TABLE incidents (
                                 incident_time TEXT,
                                 incident_number TEXT,
@@ -221,7 +220,6 @@ def populatedb(db: sqlite3.Connection, incidents: List[list[str]]) -> None :
     """
     
     cursor = db.cursor()
-    print(incidents)
     insert_query = "INSERT INTO incidents VALUES (?, ?, ?, ?, ?)"
 
     for row in incidents:
