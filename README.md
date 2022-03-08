@@ -5,8 +5,10 @@ Contains code for the projects that are done as part of text analytics class.
 
 ## How to run the project  
 1. Clone the code with following the command ```git clone https://github.com/siddhardha-maguluri/cs5293sp22-project0.git```  
-2. Open terminal in project root directory. make sure you have ```pipenv``` installed in the system. Run the following command - ```pipenv install```  
-3. The above command creates a virtual environment in the project folder and install all the packages mentioned in ```requirements.txt```     
+2. Open terminal in project root directory. make sure you have ```pipenv``` installed in the system. Run the following command  
+   ```pipenv install``` 
+3. The above command creates a virtual environment in the project folder, install all the packages mentioned in ```requirements.txt```  
+   and track the package version changes in a Pipfile. 
 4. finally, run the code using following command  
    `pipenv run python project0/main.py --incidents <incidentpageurl>`
 
@@ -21,7 +23,6 @@ Contains code for the projects that are done as part of text analytics class.
    getPage()       - to access a individual page. will send page number as a parameter.  
    extractText()   - to extract the content of a page.  
    
-
 2. ```pytest``` - This package is used to unittest the code.
    Installation : To install the package run ```pipenv install PyPDF2```
    
@@ -34,11 +35,8 @@ Contains code for the projects that are done as part of text analytics class.
 
    Usage: ```black  filename or directoryname```
 
-
-
 ## Bugs
 1. The code won't work as expected on empty pdfs.
-2. 
 
 ## Explanation of functions written in python 
 
@@ -50,7 +48,7 @@ Contains code for the projects that are done as part of text analytics class.
 6. ```getindexesofdatecolumn()``` - Given a list of page contents as input parameter, returns a list with indexes of 'date time column'. this will helps us to form a row of data. 
 
 
-## approach of database development
+## Approach of database development
 
 ```createdb()``` creates a database and also create a table named 'incidents' in the database. Before the creation of database i am checking whether the database file is there or not in project directory. if exists, i am deleting and creating a fresh database. This helps in storing the new data in database everytime we run the project. 
 
@@ -59,3 +57,4 @@ I have made the following assumptions about data.
 1. For some of the rows in pdf, if there will be any missing values, those will be always 3rd and 4th columns.
 2. For some of the rows in pdf, address column will always be 2 lines only.
 3. The url will always be a incident url.
+
