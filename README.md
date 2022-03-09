@@ -24,7 +24,7 @@ Contains code for the projects that are done as part of text analytics class.
    extractText()   - to extract the content of a page.  
    
 2. ```pytest``` - This package is used to unittest the code.
-   Installation : To install the package run ```pipenv install PyPDF2```
+   Installation : To install the package run ```pipenv install pytest```
    
    Usage:
    assert - to assert the value that a function returns.
