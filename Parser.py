@@ -138,11 +138,14 @@ def Parser():
                     tokentype,parse_look_ahead,_ = token_from_scanner
                 else:
                     parse_look_ahead = None
-            elif current_stack_top == '0' and parse_look_ahead == None:
+            elif current_stack_top == 0 and parse_look_ahead == None:  # Accept when stack_top is Z0 and there is no token from scanner.
+                step += 1
+                print('-' * 123)
+                print('|     {0:15}     |    {1:20}    |     {2:20}   |      {3:<26}     |'.format(step, get_key(
+                    current_stack_top) + '  ' + str(current_stack_top),'  ', 'Accept'))
                 program_stack.pop()
-                print('parsing completed....')
             else:
-                break
+                print('parser errror')
         elif current_stack_top == get_value('"'):
             program_stack.pop()
         elif current_stack_top in NON_TERMINALS.values():
@@ -167,7 +170,16 @@ def Parser():
                 for i in rhs.split(' ')[::-1]:
                     program_stack.append(get_value(i))
             else:
+                rule_no = find_rule(df, get_key(current_stack_top),'"')
+                rule_to_use = production_rules[str(rule_no)]
+                lhs, rhs = rule_to_use.split('->')
+                step += 1
                 program_stack.pop()
+                print('-' * 123)
+                print('|     {0:15}     |    {1:20}    |     {2:20}   |     {3:26}      |'.format(step, get_key(current_stack_top) + '  ' + str(current_stack_top), ' ',f'Use Rule {rule_no}'))
+                for i in rhs.split(' ')[::-1]:
+                    program_stack.append(get_value(i))
+
 
 def main():
     # read the file name from command line and print contents of the file to std output
@@ -178,18 +190,16 @@ def main():
 
     # parser output
     print('-' * 123)
-    print(
-        '|     {0:15}     |    {1:20}    |     {2:20}   |     {3:26}      |'.format('Steps', 'Stack_Top', 'Look_ahead',
-                                                                                    'Action'))
+    print('|     {0:15}     |    {1:20}    |     {2:20}   |     {3:26}      |'.format('Steps', 'Stack_Top', 'Look_ahead','Action'))
 
     # call parser to parse the source code
     Parser()
     print('-' * 123)
 
-    # # Print the contents of the symbol table
-    # print('--------------------- Symbol Table -----------------------')
-    # for tokenkey, tokenvalue in SYM_TAB.items():
-    #     print("|{0:15}   |  {1:>15}   |".format(tokenkey, tokenvalue))
+    # Print the contents of the symbol table
+    print('--------------------- Symbol Table -----------------------')
+    for tokenkey, tokenvalue in SYM_TAB.items():
+        print("|{0:15}   |  {1:>15}   |".format(tokenkey, tokenvalue))
 
     source_file.close()
 
